@@ -7,12 +7,14 @@ import { loadConfig } from "./config.ts";
 import { FileLabelMapStore } from "./label-map.ts";
 import { buildServer } from "./server.ts";
 import { createTools } from "./tools.ts";
+import { unlockMasterKey } from "./unlock.ts";
 import { VaultSession } from "./vault-session.ts";
 
 async function main(): Promise<void> {
   const config = loadConfig();
   const cloud = new CloudClient(config);
-  const session = new VaultSession(cloud, config.masterKeyMaterial, config.vaultId);
+  const masterKeyMaterial = await unlockMasterKey(cloud, config);
+  const session = new VaultSession(cloud, masterKeyMaterial, config.vaultId);
   const labelStore = new FileLabelMapStore(
     join(homedir(), ".advocatra-mcp", config.tenantHost, "labels.json"),
   );

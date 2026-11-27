@@ -1,20 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 //
-// Local configuration only — tenant host, login credentials, and the vault
-// master key, all read from this machine. Nothing here is ever sent
-// anywhere except the tenant host (for login) and the GET /vault/snapshot
-// request, both already-authenticated, ciphertext-only calls.
-//
-// PRAGMATIC WORKAROUND, not the final design: there is no HTTP endpoint
-// yet that stores or serves a vault manifest (no server-side "create
-// vault" flow exists — see TECHNICAL-DESIGN.md §9 in the advocatra repo
-// and this repo's own CLAUDE.md). Until that exists, this server accepts
-// the already-unwrapped vault master key directly, base64, from a local
-// file — never a passphrase it would derive a key from. The master key
-// never leaves this process; the cloud never sees it either way.
-
-import { readFileSync } from "node:fs";
-import { base64ToBytes } from "@advocatra/crypto";
+// Local configuration only — tenant host, login credentials, and the
+// secret used to unlock the vault, all read from this machine. Nothing
+// here is ever sent anywhere except the tenant host (for login) and the
+// GET /vault/manifest and GET /vault/snapshot requests, both
+// already-authenticated, ciphertext/wrapped-key-only calls — see
+// unlock.ts for where the passphrase/recovery code is actually used (only
+// in this process, never transmitted).
 
 export interface Config {
   readonly tenantHost: string;
@@ -22,7 +14,8 @@ export interface Config {
   readonly password: string;
   readonly totpCode?: string;
   readonly vaultId: string;
-  readonly masterKeyMaterial: Uint8Array;
+  readonly passphrase?: string;
+  readonly recoveryCode?: string;
 }
 
 function requireEnv(name: string): string {
@@ -33,8 +26,13 @@ function requireEnv(name: string): string {
 }
 
 export function loadConfig(): Config {
-  const vaultKeyPath = requireEnv("ADVOCATRA_VAULT_KEY_FILE");
-  const masterKeyMaterial = base64ToBytes(readFileSync(vaultKeyPath, "utf8").trim());
+  const passphrase = process.env.ADVOCATRA_VAULT_PASSPHRASE;
+  const recoveryCode = process.env.ADVOCATRA_VAULT_RECOVERY_CODE;
+  if (!passphrase && !recoveryCode) {
+    throw new Error(
+      "set either ADVOCATRA_VAULT_PASSPHRASE or ADVOCATRA_VAULT_RECOVERY_CODE. See README.md for required configuration.",
+    );
+  }
   return {
     tenantHost: requireEnv("ADVOCATRA_TENANT_HOST"),
     email: requireEnv("ADVOCATRA_EMAIL"),
@@ -43,6 +41,7 @@ export function loadConfig(): Config {
       ? { totpCode: process.env.ADVOCATRA_TOTP_CODE }
       : {}),
     vaultId: requireEnv("ADVOCATRA_VAULT_ID"),
-    masterKeyMaterial,
+    ...(passphrase ? { passphrase } : {}),
+    ...(recoveryCode ? { recoveryCode } : {}),
   };
 }

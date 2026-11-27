@@ -77,4 +77,12 @@ export class CloudClient {
       snapshot: body.snapshot ? EncryptedEnvelopeSchema.parse(body.snapshot) : null,
     };
   }
+
+  /** Fetches the raw manifest JSON. Returns null for a tenant with no vault created yet. */
+  async fetchManifest(): Promise<string | null> {
+    const response = await this.authedFetch("/vault/manifest");
+    if (response.status === 404) return null;
+    if (!response.ok) throw new Error(`GET /vault/manifest failed: ${response.status}`);
+    return response.text();
+  }
 }
