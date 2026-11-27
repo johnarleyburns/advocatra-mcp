@@ -1,0 +1,23 @@
+Advocatra MCP
+Copyright (C) 2026 John Arley Burns
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, version 3 only. See LICENSE.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+References and credits
+----------------------
+
+Advocatra MCP is an independent implementation. It contains no code copied
+from any other project. It consumes `packages/case`, `packages/billing`,
+`packages/crypto` and `packages/vault` from
+https://github.com/johnarleyburns/advocatra (same author) as a git
+submodule under `vendor/advocatra`, since those packages are not yet
+published to a package registry.
+
+Dependencies bundled with Advocatra MCP must be MIT, BSD, Apache-2.0, ISC,
+0BSD or CC0; CI enforces this.

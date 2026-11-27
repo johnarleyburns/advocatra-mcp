@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# `vendor/advocatra` is a git submodule pinned to a commit of the
+# `advocatra` repo. Its packages/* are not published to npm yet, so they're
+# consumed as ordinary pnpm workspace members from inside the submodule
+# checkout rather than invented git+subdirectory dependency syntax.
+packages:
+  - "."
+  - "vendor/advocatra/packages/*"
+allowBuilds:
+  esbuild: true

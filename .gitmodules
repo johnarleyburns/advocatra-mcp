@@ -1,0 +1,3 @@
+[submodule "vendor/advocatra"]
+	path = vendor/advocatra
+	url = https://github.com/johnarleyburns/advocatra.git
