@@ -28,6 +28,16 @@ const ALLOWED = {
     "decryptDocumentObject",
     "emptyVaultRecords",
     "VaultRecords",
+    // Widened deliberately: unlocking (unwrapping) an existing manifest's
+    // key envelope with a passphrase/recovery code the operator already
+    // holds is a read, the same trust tier as decryptVaultSnapshot above —
+    // it never creates a vault or wraps/re-wraps a key. createVault itself
+    // stays off this list; this server never creates a vault.
+    "VaultManifest",
+    "VaultManifestSchema",
+    "unlockVaultWithPassphrase",
+    "unlockVaultWithRecoveryCode",
+    "VaultUnlockError",
   ]),
   "@advocatra/sync": new Set([]),
 };

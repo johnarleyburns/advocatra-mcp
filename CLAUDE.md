@@ -95,23 +95,24 @@ enforced mechanically, not just documented:
 
 ## Status
 
-Working end-to-end: login → `GET /vault/snapshot` → local decrypt → 9
-redacted read-only tools, verified against a real `createVault`-built
-vault in tests (not just mocked). `check:no-write-tools` verified to
-actually catch a planted violation before being trusted.
+Working end-to-end: login → `GET /vault/manifest` → unlock (passphrase or
+recovery code, via `unlock.ts`'s `unlockMasterKey`) → `GET /vault/snapshot`
+→ local decrypt → 9 redacted read-only tools, verified against a real
+`createVault`-built vault in tests (not just mocked). `check:no-write-tools`
+verified to actually catch a planted violation before being trusted.
 
-**Known gap**: no HTTP endpoint in `advocatra` yet stores or serves a
-vault manifest (no server-side "create vault" flow exists — found while
-building this repo; see `advocatra`'s own `TECHNICAL-DESIGN.md` §9).
-`config.ts` works around this by accepting an already-unwrapped master
-key from a local file rather than deriving one from a passphrase against
-a real manifest. This is a stated pragmatic workaround, not the intended
-final design — revisit once `advocatra` gets a real vault-setup endpoint,
-at which point this server should do passphrase → `unlockVaultWithPassphrase`
-like any other client, not take a raw key.
+The previously-missing server endpoint now exists (`advocatra`'s
+`GET`/`PUT /vault/manifest`, ported from Saldima's `/app/vault/keys`), so
+this server does a real passphrase/recovery-code unlock like any other
+client — `config.ts` no longer accepts a raw master key from a local
+file. `check-no-write-tools.mjs`'s allowlist was widened to admit
+`VaultManifestSchema`/`unlockVaultWithPassphrase`/`unlockVaultWithRecoveryCode`
+(unwrapping an existing envelope the operator already holds a secret
+for — the same trust tier as `decryptVaultSnapshot`, already allowed);
+`createVault` itself stays off the list, since this server never creates
+a vault.
 
 Not yet done: attachment/document _content_ (only metadata is exposed —
 decrypting and summarizing actual notice/pleading PDFs is separate,
-larger, higher-risk work), multi-tenant support (one server instance
-assumes one tenant login), and a passphrase-based unlock flow (blocked on
-the gap above).
+larger, higher-risk work), and multi-tenant support (one server instance
+assumes one tenant login).

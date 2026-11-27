@@ -24,12 +24,9 @@ Working end-to-end against a vault built with `@advocatra/vault`'s
 `list_correspondence`, `list_documents`, `list_activity`, `search`), all
 PII-redacted per the policy in [`CLAUDE.md`](CLAUDE.md).
 
-**Known gap, not yet closed**: there is no HTTP endpoint anywhere in
-`advocatra` yet that stores or serves a vault's manifest — no server-side
-"create a vault" flow exists. Until that's built, this server accepts an
-already-unwrapped vault master key directly from a local file, not a
-passphrase. See `CLAUDE.md`'s "Status" section for the exact mechanism and
-what it's waiting on.
+Unlocks with your real vault passphrase or recovery code, the same way a
+browser or native app would — never a raw key file. See `CLAUDE.md`'s
+"Status" section for the exact sequence.
 
 ## Setup
 
@@ -42,13 +39,14 @@ pnpm install
 Configure via environment variables (set these in your MCP host's config,
 e.g. Claude Desktop's `mcpServers` entry — never in a committed file):
 
-| Variable                                 | Purpose                                                                      |
-| ---------------------------------------- | ---------------------------------------------------------------------------- |
-| `ADVOCATRA_TENANT_HOST`                  | e.g. `janedoe.advocatra.com`                                                 |
-| `ADVOCATRA_EMAIL` / `ADVOCATRA_PASSWORD` | your Advocatra login                                                         |
-| `ADVOCATRA_TOTP_CODE`                    | if your account has 2FA enabled                                              |
-| `ADVOCATRA_VAULT_ID`                     | your tenant id                                                               |
-| `ADVOCATRA_VAULT_KEY_FILE`               | path to a local file holding the base64 vault master key (see the gap above) |
+| Variable                                 | Purpose                                                     |
+| ---------------------------------------- | ----------------------------------------------------------- |
+| `ADVOCATRA_TENANT_HOST`                  | e.g. `janedoe.advocatra.com`                                |
+| `ADVOCATRA_EMAIL` / `ADVOCATRA_PASSWORD` | your Advocatra login                                        |
+| `ADVOCATRA_TOTP_CODE`                    | if your account has 2FA enabled                             |
+| `ADVOCATRA_VAULT_ID`                     | your tenant id                                              |
+| `ADVOCATRA_VAULT_PASSPHRASE`             | your vault passphrase (set this or the recovery code below) |
+| `ADVOCATRA_VAULT_RECOVERY_CODE`          | your vault recovery code, if you'd rather use that instead  |
 
 ```sh
 pnpm start
