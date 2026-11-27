@@ -42,13 +42,13 @@ pnpm install
 Configure via environment variables (set these in your MCP host's config,
 e.g. Claude Desktop's `mcpServers` entry — never in a committed file):
 
-| Variable | Purpose |
-| --- | --- |
-| `ADVOCATRA_TENANT_HOST` | e.g. `janedoe.advocatra.com` |
-| `ADVOCATRA_EMAIL` / `ADVOCATRA_PASSWORD` | your Advocatra login |
-| `ADVOCATRA_TOTP_CODE` | if your account has 2FA enabled |
-| `ADVOCATRA_VAULT_ID` | your tenant id |
-| `ADVOCATRA_VAULT_KEY_FILE` | path to a local file holding the base64 vault master key (see the gap above) |
+| Variable                                 | Purpose                                                                      |
+| ---------------------------------------- | ---------------------------------------------------------------------------- |
+| `ADVOCATRA_TENANT_HOST`                  | e.g. `janedoe.advocatra.com`                                                 |
+| `ADVOCATRA_EMAIL` / `ADVOCATRA_PASSWORD` | your Advocatra login                                                         |
+| `ADVOCATRA_TOTP_CODE`                    | if your account has 2FA enabled                                              |
+| `ADVOCATRA_VAULT_ID`                     | your tenant id                                                               |
+| `ADVOCATRA_VAULT_KEY_FILE`               | path to a local file holding the base64 vault master key (see the gap above) |
 
 ```sh
 pnpm start
