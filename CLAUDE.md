@@ -36,7 +36,7 @@ enforced mechanically, not just documented:
   `vendor/advocatra/packages/*` as ordinary workspace members, so
   `@advocatra/case`/`billing`/`crypto`/`vault` resolve via the normal
   `workspace:*` protocol — verified to actually work, not assumed.
-- **Redaction** (`redact.ts`, `scrub.ts`, `label-map.ts`) is the *only*
+- **Redaction** (`redact.ts`, `scrub.ts`, `label-map.ts`) is the _only_
   place real field values are read. Every tool in `tools.ts` must return
   redacted objects, never a raw record from `@advocatra/case`/`billing`.
   - Name → a stable "Client N" label, assigned once per taxpayerId and
@@ -48,7 +48,7 @@ enforced mechanically, not just documented:
   - Address, phone, email → omitted entirely, never partially redacted.
   - Free-text fields (`Matter.notes`, `Correspondence.summary`,
     `ActivityLogEntry.description`/`.actor`, `Task.title`) → passed
-    through `scrubFreeText`, which replaces SSN/EIN/phone/email-*shaped*
+    through `scrubFreeText`, which replaces SSN/EIN/phone/email-_shaped_
     substrings. **This does not catch a plain name or address written in
     prose** — an explicitly accepted gap (owner's call), not a bug. Don't
     "fix" this by trying to catch names; that was deliberately rejected in
@@ -75,16 +75,16 @@ enforced mechanically, not just documented:
 
 ## Commands
 
-| Command | Purpose |
-| --- | --- |
-| `pnpm install` | install, including the submodule's workspace packages |
-| `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm lint` | Biome check |
-| `pnpm test` | Vitest unit tests |
-| `pnpm check:spdx` | every tracked source file has an SPDX header |
-| `pnpm check:licenses` | dependency license scan |
-| `pnpm check:no-write-tools` | fails if `src/` imports a write-capable export |
-| `pnpm start` | run the server (stdio transport) against real config |
+| Command                     | Purpose                                               |
+| --------------------------- | ----------------------------------------------------- |
+| `pnpm install`              | install, including the submodule's workspace packages |
+| `pnpm typecheck`            | `tsc --noEmit`                                        |
+| `pnpm lint`                 | Biome check                                           |
+| `pnpm test`                 | Vitest unit tests                                     |
+| `pnpm check:spdx`           | every tracked source file has an SPDX header          |
+| `pnpm check:licenses`       | dependency license scan                               |
+| `pnpm check:no-write-tools` | fails if `src/` imports a write-capable export        |
+| `pnpm start`                | run the server (stdio transport) against real config  |
 
 ## Definition of done (every PR)
 
@@ -110,7 +110,7 @@ final design — revisit once `advocatra` gets a real vault-setup endpoint,
 at which point this server should do passphrase → `unlockVaultWithPassphrase`
 like any other client, not take a raw key.
 
-Not yet done: attachment/document *content* (only metadata is exposed —
+Not yet done: attachment/document _content_ (only metadata is exposed —
 decrypting and summarizing actual notice/pleading PDFs is separate,
 larger, higher-risk work), multi-tenant support (one server instance
 assumes one tenant login), and a passphrase-based unlock flow (blocked on
